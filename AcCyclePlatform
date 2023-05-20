@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: "PDU_IP",
+             description: "PDU IP for Target Platform",
+             )
+        string(name: "PDU_PORT",
+             description: "PDU IP for Target Platform",
+             )
+    }
+    stages {
+        stage('Clone Automation Repository'){
+            steps {
+                git branch: 'main', credentialsId: 'e28b8b07-c79a-4948-a2ee-02115cf60a28', url: 'https://github.com/jcarranz97/automation'
+            }
+        }
+        stage('AC Cycle PDU') {
+            steps {
+                sh 'ls -la'
+                sh "python3 platform/ac_cycle_pdu.py --ip ${params.PDU_IP} --port ${params.PDU_PORT}"
+            }
+        }
+    }
+}
